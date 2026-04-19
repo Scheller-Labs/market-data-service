@@ -1,0 +1,34 @@
+# Market Data Service — Sample Watchlist
+# One symbol per line. Lines starting with # are ignored.
+# Use with: market-data warm --watchlist watchlist.txt --days 365
+
+# Broad Market ETFs
+SPY
+QQQ
+IWM
+DIA
+
+# Sector ETFs
+XLF
+XLK
+XLE
+XLV
+XLU
+XLI
+
+# High-Volume Optionable Stocks
+AAPL
+MSFT
+TSLA
+NVDA
+AMZN
+GOOGL
+META
+AMD
+
+# Volatility
+VIX
+
+# Fixed Income / Macro
+TLT
+GLD

@@ -1,0 +1,293 @@
+{
+  "run_date": "2026-03-20",
+  "summary": {
+    "PASS": 27,
+    "WARN": 1,
+    "FAIL": 0,
+    "ERROR": 0,
+    "NOTE": 0
+  },
+  "exit_code": 1,
+  "checks": [
+    {
+      "check": "OHLCV",
+      "symbol": "AAPL",
+      "metric": "close (adj)",
+      "ref_value": 247.99000549316406,
+      "prv_value": 247.99,
+      "diff_pct": -2.2150747738728827e-06,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance (auto-adjusted)"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "AAPL",
+      "metric": "volume",
+      "ref_value": 88331081.0,
+      "prv_value": 88331081.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Volume: sources differ on ext-hours inclusion; \u00b125% acceptable"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "SPY",
+      "metric": "close (adj)",
+      "ref_value": 648.5700073242188,
+      "prv_value": 648.57,
+      "diff_pct": -1.1292872962465607e-06,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance (auto-adjusted)"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "SPY",
+      "metric": "volume",
+      "ref_value": 138283514.0,
+      "prv_value": 163617522.0,
+      "diff_pct": 18.32033860522231,
+      "status": "WARN",
+      "note": "Volume: sources differ on ext-hours inclusion; \u00b125% acceptable"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "GOOGL",
+      "metric": "close (adj)",
+      "ref_value": 301.0,
+      "prv_value": 301.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance (auto-adjusted)"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "GOOGL",
+      "metric": "volume",
+      "ref_value": 44364079.0,
+      "prv_value": 44364079.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Volume: sources differ on ext-hours inclusion; \u00b125% acceptable"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "MSFT",
+      "metric": "close (adj)",
+      "ref_value": 381.8500061035156,
+      "prv_value": 381.87,
+      "diff_pct": 0.005236060276233021,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance (auto-adjusted)"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "MSFT",
+      "metric": "volume",
+      "ref_value": 50853154.0,
+      "prv_value": 50853154.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Volume: sources differ on ext-hours inclusion; \u00b125% acceptable"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "TSLA",
+      "metric": "close (adj)",
+      "ref_value": 367.9599914550781,
+      "prv_value": 367.96,
+      "diff_pct": 2.3222421059273136e-06,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance (auto-adjusted)"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "TSLA",
+      "metric": "volume",
+      "ref_value": 78628603.0,
+      "prv_value": 78628603.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Volume: sources differ on ext-hours inclusion; \u00b125% acceptable"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "P/E Ratio",
+      "ref_value": 31.351456,
+      "prv_value": 31.35,
+      "diff_pct": -0.004644122429265994,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "EPS",
+      "ref_value": 7.91,
+      "prv_value": 7.91,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "Market Cap",
+      "ref_value": 3644938780672.0,
+      "prv_value": 3644938781000.0,
+      "diff_pct": 8.998779396221524e-09,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "ROE",
+      "ref_value": 1.5202099,
+      "prv_value": 1.52,
+      "diff_pct": -0.013807303846658615,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "P/E Ratio",
+      "ref_value": 27.844587,
+      "prv_value": 27.84,
+      "diff_pct": -0.016473578868312123,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "EPS",
+      "ref_value": 10.81,
+      "prv_value": 10.81,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "Market Cap",
+      "ref_value": 3641197199360.0,
+      "prv_value": 3641197199000.0,
+      "diff_pct": -9.886858093356655e-09,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "ROE",
+      "ref_value": 0.35705003,
+      "prv_value": 0.357,
+      "diff_pct": -0.01401204195390607,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "P/E Ratio",
+      "ref_value": 23.92544,
+      "prv_value": 23.93,
+      "diff_pct": 0.01905921061431452,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "EPS",
+      "ref_value": 15.96,
+      "prv_value": 15.96,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "Market Cap",
+      "ref_value": 2838053519360.0,
+      "prv_value": 2838202155000.0,
+      "diff_pct": 0.005237238797156945,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "ROE",
+      "ref_value": 0.34390998,
+      "prv_value": 0.344,
+      "diff_pct": 0.026175454402331814,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "SPY",
+      "metric": "total_contracts",
+      "ref_value": null,
+      "prv_value": 12940.0,
+      "diff_pct": null,
+      "status": "PASS",
+      "note": "Databento OPRA.PILLAR snapshot 2026-03-20"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "SPY",
+      "metric": "call/put symmetry error",
+      "ref_value": 0.0,
+      "prv_value": 0.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "calls=6,470  puts=6,470; perfect symmetry \u2192 0%"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "SPY",
+      "metric": "EOD price coverage",
+      "ref_value": 40.0,
+      "prv_value": 49.64451313755796,
+      "diff_pct": 9.644513137557958,
+      "status": "PASS",
+      "note": "6,424 of 12,940 contracts have EOD close; illiquid deep OTM expected"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "AAPL",
+      "metric": "total_contracts",
+      "ref_value": null,
+      "prv_value": 3292.0,
+      "diff_pct": null,
+      "status": "PASS",
+      "note": "Databento OPRA.PILLAR snapshot 2026-03-20"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "AAPL",
+      "metric": "call/put symmetry error",
+      "ref_value": 0.0,
+      "prv_value": 0.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "calls=1,646  puts=1,646; perfect symmetry \u2192 0%"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "AAPL",
+      "metric": "EOD price coverage",
+      "ref_value": 40.0,
+      "prv_value": 42.61846901579587,
+      "diff_pct": 2.618469015795867,
+      "status": "PASS",
+      "note": "1,403 of 3,292 contracts have EOD close; illiquid deep OTM expected"
+    }
+  ]
+}
