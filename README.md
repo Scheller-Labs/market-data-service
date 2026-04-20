@@ -1,3 +1,5 @@
+## WARNING: This is a new project and needs some validation work before it is fully ready. Expect issues. I am working to stabilize quickly.
+
 # Market Data Service
 
 Shared market data infrastructure for the agent trading firm. All trading agents fetch data through this service — no agent calls Alpha Vantage, Finnhub, or Databento directly.
