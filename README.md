@@ -1,5 +1,7 @@
 ## WARNING: This is a new project and needs some validation work before it is fully ready. Expect issues. I am working to stabilize quickly.
 
+## High quality market data can carry significant costs. Please ensure you are aware of all the costs for the various tiers on each provider to avoid any surprises. Check the provider's website for exact costs as any references to tiers in the documentation may have changed.
+
 # Market Data Service
 
 Shared market data infrastructure for the agent trading firm. All trading agents fetch data through this service — no agent calls Alpha Vantage, Finnhub, or Databento directly.
