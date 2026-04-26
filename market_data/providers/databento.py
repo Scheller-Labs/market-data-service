@@ -272,18 +272,49 @@ class DatabentoProvider(BaseProvider):
 
     def _fetch_ohlcv(self, symbol: str, start: date, end: date, interval: Interval) -> pd.DataFrame:
         _check_databento_confirmation(symbol)
+        from market_data.utils.date_utils import last_market_day
         schema = self._interval_to_schema(interval)
         client = self._get_client()
 
-        logger.info(f"[databento] Fetching {schema} for {symbol} {start}→{end}")
-        data = client.timeseries.get_range(
-            dataset=DATASET_EQUITIES,
-            symbols=[symbol.upper()],
-            schema=schema,
-            start=start.isoformat(),
-            end=end.isoformat(),
-        )
-        df = data.to_df()
+        # XNAS.ITCH processes completed trading days only (T+1 on weekends).
+        # Cap the inclusive end to the last market day so we never pass a
+        # weekend/holiday as the boundary.
+        safe_end = last_market_day(end)
+        if safe_end < start:
+            logger.info("[databento] No market days in requested range %s→%s", start, end)
+            return pd.DataFrame()
+
+        # Databento end is exclusive: pass safe_end + 1 day to include safe_end's bars.
+        end_exclusive = (safe_end + timedelta(days=1)).isoformat()
+        logger.info("[databento] Fetching %s for %s %s→%s", schema, symbol, start, safe_end)
+        try:
+            data = client.timeseries.get_range(
+                dataset=DATASET_EQUITIES,
+                symbols=[symbol.upper()],
+                schema=schema,
+                start=start.isoformat(),
+                end=end_exclusive,
+            )
+            df = data.to_df()
+        except Exception as exc:
+            exc_str = str(exc)
+            if "data_end_after_available_end" in exc_str:
+                # T+1 processing lag — most recent day not yet available (common on weekends).
+                logger.warning(
+                    "[databento] XNAS.ITCH data for %s not yet available "
+                    "(T+1 processing lag — try again on the next business day). "
+                    "Requested end: %s",
+                    symbol, safe_end,
+                )
+                return pd.DataFrame()
+            if "data_time_range_start_on_or_after_end" in exc_str:
+                logger.warning(
+                    "[databento] No data in range %s→%s for %s (start ≥ available end)",
+                    start, safe_end, symbol,
+                )
+                return pd.DataFrame()
+            raise
+
         if df.empty:
             return df
 
@@ -571,24 +602,43 @@ class DatabentoProvider(BaseProvider):
         _check_databento_confirmation(symbol)
         self._limiter.wait_if_needed()
         client = self._get_client()
-        today = date.today()
+        from market_data.utils.date_utils import last_market_day
+        snap = last_market_day()  # last trading day ≤ today; safe on weekends/holidays
         sym = symbol.upper()
         parent_sym = f"{sym}.OPT"
 
         # Step 1: underlying close price (last 5 trading days, take most recent)
+        eq_start = (snap - timedelta(days=7)).isoformat()
+        eq_end   = (snap + timedelta(days=1)).isoformat()
         underlying_price: Optional[float] = None
         try:
             eq_data = client.timeseries.get_range(
                 dataset=DATASET_EQUITIES,
                 symbols=[sym],
                 schema="ohlcv-1d",
-                start=(today - timedelta(days=7)).isoformat(),
-                end=(today + timedelta(days=1)).isoformat(),
+                start=eq_start,
+                end=eq_end,
             ).to_df()
             if not eq_data.empty:
                 underlying_price = float(eq_data.iloc[-1]["close"]) / 1e9
         except Exception as exc:
-            logger.warning("[databento] Could not fetch underlying price for %s: %s", sym, exc)
+            if "402" in str(exc) or "account_insufficient_funds" in str(exc):
+                cost = self.estimate_cost(
+                    dataset=DATASET_EQUITIES,
+                    symbols=[sym],
+                    schema="ohlcv-1d",
+                    start=eq_start,
+                    end=eq_end,
+                )
+                cost_str = f"${cost:.6f}" if cost is not None else "unknown"
+                logger.warning(
+                    "[databento] Insufficient funds — cannot fetch underlying price for %s. "
+                    "Estimated cost for this XNAS.ITCH ohlcv-1d query (%s → %s): %s. "
+                    "Add funds at https://app.databento.com/portal/billing",
+                    sym, eq_start, eq_end, cost_str,
+                )
+            else:
+                logger.warning("[databento] Could not fetch underlying price for %s: %s", sym, exc)
 
         if not underlying_price:
             logger.warning(
@@ -598,9 +648,9 @@ class DatabentoProvider(BaseProvider):
             )
             return pd.DataFrame()
 
-        # Step 2: options chain (definition + ohlcv-1d) for today
-        start_str = today.isoformat()
-        end_str   = (today + timedelta(days=1)).isoformat()
+        # Step 2: options chain (definition + ohlcv-1d) for the last trading day
+        start_str = snap.isoformat()
+        end_str   = (snap + timedelta(days=1)).isoformat()
 
         try:
             defs_df = client.timeseries.get_range(
@@ -616,7 +666,7 @@ class DatabentoProvider(BaseProvider):
             return pd.DataFrame()
 
         if defs_df.empty:
-            logger.warning("[databento] No options definitions for %s on %s", sym, today)
+            logger.warning("[databento] No options definitions for %s on %s", sym, snap)
             return pd.DataFrame()
 
         defs_df = defs_df[defs_df["instrument_class"].isin(["C", "P"])].copy()
@@ -636,14 +686,14 @@ class DatabentoProvider(BaseProvider):
             ohlcv_df = pd.DataFrame()
 
         # Step 3: compute ATM IV
-        atm_iv = compute_atm_iv_from_opra(defs_df, ohlcv_df, underlying_price, today)
+        atm_iv = compute_atm_iv_from_opra(defs_df, ohlcv_df, underlying_price, snap)
         if atm_iv is None:
-            logger.warning("[databento] Could not compute ATM IV for %s on %s", sym, today)
+            logger.warning("[databento] Could not compute ATM IV for %s on %s", sym, snap)
             return pd.DataFrame()
 
         logger.info("[databento] ATM IV for %s: %.4f", sym, atm_iv)
         return pd.DataFrame([{
-            "recorded_at": today,
+            "recorded_at": snap,
             "symbol":      sym,
             "current_iv":  round(atm_iv, 6),
             "provider":    self.name,
@@ -671,30 +721,45 @@ class DatabentoProvider(BaseProvider):
         if underlying_price <= 0:
             return None
 
-        target = snap or (date.today() - timedelta(days=1))
-        # Clamp to yesterday so we never exceed the OPRA available range
-        if target >= date.today():
-            target = date.today() - timedelta(days=1)
+        from market_data.utils.date_utils import last_market_day as _last_mkt
+        # Default: last trading day before today. On weekends this is Friday, but
+        # OPRA.PILLAR T+1 processing means the most recent trading day's EOD data
+        # may not be available yet (e.g. Friday data arrives Monday). We retry once
+        # with the previous trading day on a 422 "data_start_after_available_end".
+        if snap is not None:
+            target = snap if snap < date.today() else _last_mkt(date.today() - timedelta(days=1))
+        else:
+            target = _last_mkt(date.today() - timedelta(days=1))
 
-        start_str = target.isoformat()
-        end_str   = (target + timedelta(days=1)).isoformat()
         parent_sym = f"{symbol.upper()}.OPT"
-
         self._limiter.wait_if_needed()
         client = self._get_client()
 
-        try:
-            defs_df = client.timeseries.get_range(
-                dataset=DATASET_OPTIONS,
-                symbols=[parent_sym],
-                stype_in="parent",
-                schema="definition",
-                start=start_str,
-                end=end_str,
-            ).to_df()
-        except Exception as exc:
-            logger.warning("[databento] fetch_atm_iv_with_spot definition failed for %s: %s", symbol, exc)
-            return None
+        defs_df = pd.DataFrame()
+        for attempt in range(2):
+            start_str = target.isoformat()
+            end_str   = (target + timedelta(days=1)).isoformat()
+            try:
+                defs_df = client.timeseries.get_range(
+                    dataset=DATASET_OPTIONS,
+                    symbols=[parent_sym],
+                    stype_in="parent",
+                    schema="definition",
+                    start=start_str,
+                    end=end_str,
+                ).to_df()
+                break  # success — exit retry loop
+            except Exception as exc:
+                if "data_start_after_available_end" in str(exc) and attempt == 0:
+                    prev = _last_mkt(target - timedelta(days=1))
+                    logger.info(
+                        "[databento] OPRA data not yet available for %s (T+1 lag) — retrying with %s",
+                        target, prev,
+                    )
+                    target = prev
+                    continue
+                logger.warning("[databento] fetch_atm_iv_with_spot definition failed for %s: %s", symbol, exc)
+                return None
 
         if defs_df.empty:
             return None
@@ -702,6 +767,8 @@ class DatabentoProvider(BaseProvider):
         defs_df = defs_df[defs_df["instrument_class"].isin(["C", "P"])].copy()
         defs_df = defs_df.drop_duplicates(subset="instrument_id", keep="last")
 
+        start_str = target.isoformat()
+        end_str   = (target + timedelta(days=1)).isoformat()
         try:
             ohlcv_df = client.timeseries.get_range(
                 dataset=DATASET_OPTIONS,
@@ -730,6 +797,40 @@ class DatabentoProvider(BaseProvider):
         except Exception as e:
             logger.warning(f"[databento] Health check failed: {e}")
             return False
+
+    # ── Cost Estimation ───────────────────────────────────────────────────
+
+    def estimate_cost(
+        self,
+        dataset: str,
+        symbols: list[str],
+        schema: str,
+        start: str,
+        end: str,
+        stype_in: str = "raw_symbol",
+    ) -> Optional[float]:
+        """
+        Return the estimated USD cost of a Databento query without downloading data.
+
+        Uses client.metadata.get_cost() which is a free metadata call — it does not
+        consume account funds even when the account balance is zero.
+
+        Returns the cost in USD as a float, or None if the estimate itself fails.
+        """
+        try:
+            client = self._get_client()
+            cost = client.metadata.get_cost(
+                dataset=dataset,
+                symbols=symbols,
+                schema=schema,
+                start=start,
+                end=end,
+                stype_in=stype_in,
+            )
+            return float(cost)
+        except Exception as exc:
+            logger.debug("[databento] Cost estimation failed: %s", exc)
+            return None
 
     # ── Helpers ───────────────────────────────────────────────────────────
 

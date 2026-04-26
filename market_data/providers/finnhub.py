@@ -210,6 +210,9 @@ class FinnhubProvider(BaseProvider):
 
         Returns a single-row DataFrame: recorded_at, symbol, current_iv, provider.
         Returns empty DataFrame if IV cannot be computed (no options data).
+
+        Note: /stock/option-chain requires a Finnhub paid plan. The free-tier key
+        will produce a 403 here; upgrade at finnhub.io/pricing to unlock it.
         """
         today = date.today()
 
@@ -220,8 +223,21 @@ class FinnhubProvider(BaseProvider):
             logger.warning("[%s] Could not get current price for %s", self.name, symbol)
             return pd.DataFrame()
 
-        # Step 2: options chain
-        chain = self._get("/stock/option-chain", {"symbol": symbol.upper()})
+        # Step 2: options chain (paid endpoint — free tier returns 403)
+        try:
+            chain = self._get("/stock/option-chain", {"symbol": symbol.upper()})
+        except Exception as exc:
+            if "403" in str(exc):
+                logger.warning(
+                    "[finnhub] /stock/option-chain returned 403 for %s. "
+                    "Options data requires a Finnhub paid plan (finnhub.io/pricing). "
+                    "Falling back to stored options chain.",
+                    symbol,
+                )
+            else:
+                logger.warning("[finnhub] Could not fetch option chain for %s: %s", symbol, exc)
+            return pd.DataFrame()
+
         atm_iv = self._compute_atm_iv(chain.get("data", []), current_price, today)
         if atm_iv is None:
             logger.warning("[%s] Could not compute ATM IV for %s", self.name, symbol)

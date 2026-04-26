@@ -1,0 +1,253 @@
+{
+  "run_date": "2026-04-24",
+  "summary": {
+    "PASS": 8,
+    "WARN": 0,
+    "FAIL": 0,
+    "ERROR": 16,
+    "NOTE": 0
+  },
+  "exit_code": 2,
+  "checks": [
+    {
+      "check": "OHLCV",
+      "symbol": "AAPL",
+      "metric": "close (adj)",
+      "ref_value": 271.05999755859375,
+      "prv_value": 271.06,
+      "diff_pct": 9.006885096521812e-07,
+      "status": "PASS",
+      "note": "Alpha Vantage vs yfinance (auto-adjusted)"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "AAPL",
+      "metric": "volume",
+      "ref_value": 38124500.0,
+      "prv_value": 38157110.0,
+      "diff_pct": 0.08553554800718698,
+      "status": "PASS",
+      "note": "Volume: sources differ on ext-hours inclusion; \u00b125% acceptable"
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "SPY",
+      "metric": "close",
+      "ref_value": 713.9400024414062,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "GOOGL",
+      "metric": "close",
+      "ref_value": 344.3999938964844,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "MSFT",
+      "metric": "close",
+      "ref_value": 424.6199951171875,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "OHLCV",
+      "symbol": "TSLA",
+      "metric": "close",
+      "ref_value": 376.29998779296875,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "P/E Ratio",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "EPS",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "Market Cap",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "AAPL",
+      "metric": "ROE",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "P/E Ratio",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "EPS",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "Market Cap",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "GOOGL",
+      "metric": "ROE",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "P/E Ratio",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "EPS",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "Market Cap",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "FUNDAMENTALS",
+      "symbol": "MSFT",
+      "metric": "ROE",
+      "ref_value": null,
+      "prv_value": null,
+      "diff_pct": null,
+      "status": "ERROR",
+      "note": "Alpha Vantage: Alpha Vantage API limit: We have detected your API key as MARKMI8R5V5SIPTU and our standard API rate limit is 25 requests per day. Please subscribe to any of the premium plans at https://www.alphavantage.co/premium/ to instantly remove all daily rate limits."
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "SPY",
+      "metric": "total_contracts",
+      "ref_value": null,
+      "prv_value": 12486.0,
+      "diff_pct": null,
+      "status": "PASS",
+      "note": "Databento OPRA.PILLAR snapshot 2026-04-24"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "SPY",
+      "metric": "call/put symmetry error",
+      "ref_value": 0.0,
+      "prv_value": 0.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "calls=6,243  puts=6,243; perfect symmetry \u2192 0%"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "SPY",
+      "metric": "EOD price coverage",
+      "ref_value": 40.0,
+      "prv_value": 44.78616049975973,
+      "diff_pct": 4.786160499759731,
+      "status": "PASS",
+      "note": "5,592 of 12,486 contracts have EOD close; illiquid deep OTM expected"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "AAPL",
+      "metric": "total_contracts",
+      "ref_value": null,
+      "prv_value": 3262.0,
+      "diff_pct": null,
+      "status": "PASS",
+      "note": "Databento OPRA.PILLAR snapshot 2026-04-24"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "AAPL",
+      "metric": "call/put symmetry error",
+      "ref_value": 0.0,
+      "prv_value": 0.0,
+      "diff_pct": 0.0,
+      "status": "PASS",
+      "note": "calls=1,631  puts=1,631; perfect symmetry \u2192 0%"
+    },
+    {
+      "check": "OPTIONS",
+      "symbol": "AAPL",
+      "metric": "EOD price coverage",
+      "ref_value": 40.0,
+      "prv_value": 43.807480073574496,
+      "diff_pct": 3.807480073574496,
+      "status": "PASS",
+      "note": "1,429 of 3,262 contracts have EOD close; illiquid deep OTM expected"
+    }
+  ]
+}

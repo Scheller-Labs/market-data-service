@@ -151,6 +151,21 @@ class ProviderRouter:
             for name, provider in self._providers.items()
         }
 
+    def iter_for_type(self, data_type: DataType) -> list[BaseProvider]:
+        """Return all configured, healthy providers for a data type in priority order."""
+        priority = PROVIDER_PRIORITY.get(data_type, [])
+        result = []
+        for name in priority:
+            provider = self._providers.get(name)
+            if provider is None:
+                continue
+            if not provider.supports(data_type):
+                continue
+            if self._health_cache.get(name) is False:
+                continue
+            result.append(provider)
+        return result
+
     def get(self, name: str) -> Optional[BaseProvider]:
         """Get a specific provider by name."""
         return self._providers.get(name)

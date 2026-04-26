@@ -582,7 +582,7 @@ class TestIVRankCommand:
         with patch("market_data.cli._get_service", return_value=mock_svc):
             runner.invoke(app, ["iv-rank", "--symbol", "AAPL", "--days", "30"])
 
-        mock_svc.get_iv_rank.assert_called_once_with(symbol="AAPL", lookback_days=30)
+        mock_svc.get_iv_rank.assert_called_once_with(symbol="AAPL", lookback_days=30, force_refresh=False)
 
     def test_iv_rank_empty_data_returns_count_zero(self):
         """When no IV rank data is available, should return rows=0 without error."""

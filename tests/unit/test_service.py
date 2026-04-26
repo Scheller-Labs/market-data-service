@@ -362,12 +362,14 @@ class TestGetIVRank:
         }])
         history_df = self._make_history_df([0.20, 0.22, 0.18, 0.24], today)
 
+        mock_provider = MagicMock()
+        mock_provider.fetch_iv_rank.return_value = raw_df
         svc.store.query_iv_rank_history.side_effect = [
             pd.DataFrame(),   # today check → empty
             history_df,       # prior history
             history_df,       # final return
         ]
-        svc.router.select.return_value.fetch_iv_rank.return_value = raw_df
+        svc.router.iter_for_type.return_value = [mock_provider]
 
         result = svc.get_iv_rank("SPY", lookback_days=252)
 
@@ -390,7 +392,7 @@ class TestGetIVRank:
 
         svc.get_iv_rank("SPY")
 
-        svc.router.select.assert_not_called()
+        svc.router.iter_for_type.assert_not_called()
         svc.store.upsert_iv_rank.assert_not_called()
 
     def test_iv_rank_formula(self, svc):
@@ -403,10 +405,12 @@ class TestGetIVRank:
         }])
         history = self._make_history_df([0.10, 0.15, 0.25, 0.30], today)
 
+        mock_provider = MagicMock()
+        mock_provider.fetch_iv_rank.return_value = raw_df
         svc.store.query_iv_rank_history.side_effect = [
             pd.DataFrame(), history, history
         ]
-        svc.router.select.return_value.fetch_iv_rank.return_value = raw_df
+        svc.router.iter_for_type.return_value = [mock_provider]
 
         svc.get_iv_rank("SPY")
 
@@ -425,10 +429,12 @@ class TestGetIVRank:
         }])
         history = self._make_history_df([0.10, 0.15, 0.20, 0.25], today)
 
+        mock_provider = MagicMock()
+        mock_provider.fetch_iv_rank.return_value = raw_df
         svc.store.query_iv_rank_history.side_effect = [
             pd.DataFrame(), history, history
         ]
-        svc.router.select.return_value.fetch_iv_rank.return_value = raw_df
+        svc.router.iter_for_type.return_value = [mock_provider]
 
         svc.get_iv_rank("SPY")
 
@@ -444,7 +450,7 @@ class TestGetIVRank:
             pd.DataFrame(),  # today check → empty
             history,         # final return
         ]
-        svc.router.select.side_effect = ValueError("no provider")
+        svc.router.iter_for_type.return_value = []  # no providers available
 
         result = svc.get_iv_rank("SPY")
 

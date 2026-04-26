@@ -111,13 +111,24 @@ class CoverageManifest:
         data_type: DataType,
         interval: Optional[Interval] = None,
     ) -> list[tuple[date, date]]:
-        """Return all locally covered date ranges for this symbol/type."""
+        """Return all locally covered date ranges for this symbol/type.
+
+        When interval is None, all stored intervals are included (wildcard).
+        When interval is specified, only records for that exact interval are returned.
+        """
         with self._conn() as conn:
-            rows = conn.execute("""
-                SELECT start_date, end_date FROM coverage_map
-                WHERE symbol = ? AND data_type = ? AND interval = ?
-                ORDER BY start_date
-            """, (symbol.upper(), data_type.value, interval.value if interval else "")).fetchall()
+            if interval is not None:
+                rows = conn.execute("""
+                    SELECT start_date, end_date FROM coverage_map
+                    WHERE symbol = ? AND data_type = ? AND interval = ?
+                    ORDER BY start_date
+                """, (symbol.upper(), data_type.value, interval.value)).fetchall()
+            else:
+                rows = conn.execute("""
+                    SELECT start_date, end_date FROM coverage_map
+                    WHERE symbol = ? AND data_type = ?
+                    ORDER BY start_date
+                """, (symbol.upper(), data_type.value)).fetchall()
 
         ranges = [(date.fromisoformat(r["start_date"]), date.fromisoformat(r["end_date"])) for r in rows]
         return self._merge_ranges(ranges)

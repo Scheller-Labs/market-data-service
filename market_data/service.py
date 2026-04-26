@@ -158,11 +158,14 @@ class MarketDataService:
 
         if today_df.empty or force_refresh:
             raw_df = pd.DataFrame()
-            try:
-                provider = self.router.select(DataType.IV_RANK)
-                raw_df = provider.fetch_iv_rank(symbol)
-            except Exception as exc:
-                logger.warning("Could not fetch IV rank for %s via provider: %s", symbol, exc)
+            for provider in self.router.iter_for_type(DataType.IV_RANK):
+                try:
+                    raw_df = provider.fetch_iv_rank(symbol)
+                    if not raw_df.empty:
+                        break
+                    logger.warning("IV rank provider %s returned empty for %s", provider.name, symbol)
+                except Exception as exc:
+                    logger.warning("Could not fetch IV rank for %s via %s: %s", symbol, provider.name, exc)
 
             # Fallback 1: compute ATM IV from OPRA via Databento using stored spot price.
             # Handles NYSE/Arca-listed underlyings (SPY, QQQ) where XNAS.ITCH is unavailable.

@@ -118,8 +118,10 @@ class TimescaleStore:
         Returns an empty DataFrame if no rows match.
         """
         table = "ohlcv_intraday" if interval != Interval.ONE_DAY else "ohlcv_daily"
+        # adj_close is a daily concept and does not exist in ohlcv_intraday
+        adj_col = ", adj_close" if table == "ohlcv_daily" else ""
         sql = text(f"""
-            SELECT timestamp, symbol, open, high, low, close, volume, adj_close, provider
+            SELECT timestamp, symbol, open, high, low, close, volume{adj_col}, provider
             FROM {table}
             WHERE symbol = :symbol
               AND timestamp >= :start

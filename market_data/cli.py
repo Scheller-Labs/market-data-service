@@ -446,6 +446,8 @@ def iv_rank(
     symbol: str = typer.Option(..., "--symbol", "-s", help="Ticker symbol, e.g. AAPL"),
     days: int = typer.Option(252, "--days", "-d",
                               help="Lookback window in calendar days (default: 252 ≈ 1 trading year)"),
+    force_refresh: bool = typer.Option(False, "--force-refresh", "-f",
+                                        help="Recompute today's rank/percentile from the full lookback history"),
     format: str = typer.Option("json", "--format", help="Output format: json | csv"),
     verbose: bool = typer.Option(False, "--verbose", "-v"),
 ) -> None:
@@ -456,11 +458,15 @@ def iv_rank(
     52-week range. Values near 100 indicate elevated IV (sell premium);
     values near 0 indicate depressed IV (buy premium).
 
+    Use --force-refresh after running iv-rank-backfill to recompute today's
+    rank/percentile against the newly populated history.
+
     Used by strategy agents for all volatility-based entry/exit decisions.
 
     Examples:
       market-data iv-rank --symbol AAPL
       market-data iv-rank --symbol SPY --days 504  # 2-year lookback
+      market-data iv-rank --symbol AAPL --force-refresh  # recompute after backfill
     """
     _setup_logging(verbose)
 
@@ -469,11 +475,10 @@ def iv_rank(
 
     try:
         svc = _get_service()
-        # get_iv_rank() fetches today's ATM IV from Finnhub if not already stored,
-        # computes rank/percentile from history, upserts, then returns the history.
         df = svc.get_iv_rank(
             symbol=symbol.upper(),
             lookback_days=days,
+            force_refresh=force_refresh,
         )
 
         if df.empty:

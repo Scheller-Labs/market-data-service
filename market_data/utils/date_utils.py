@@ -79,6 +79,14 @@ def next_market_day(d: date) -> date:
     return candidate
 
 
+def last_market_day(from_date: Optional[date] = None) -> date:
+    """Return the most recent NYSE trading day on or before from_date (default: today)."""
+    candidate = from_date or date.today()
+    while not is_market_day(candidate):
+        candidate -= timedelta(days=1)
+    return candidate
+
+
 def days_back(n: int, from_date: Optional[date] = None) -> date:
     """Return the date n calendar days before from_date (default: today)."""
     base = from_date or date.today()

@@ -3,10 +3,20 @@ market_data/models.py
 Unified data models — the canonical schema every provider normalizes to.
 """
 
+import warnings
+
 from pydantic import BaseModel, Field
 from enum import Enum
 from typing import Optional, Any
 from datetime import date, datetime
+
+# "schema" is intentionally used as a field name (column-list contract for CLI consumers).
+# It shadows BaseModel.schema() which is deprecated in Pydantic v2 anyway.
+warnings.filterwarnings(
+    "ignore",
+    message=r'Field name "schema" .* shadows an attribute in parent "BaseModel"',
+    category=UserWarning,
+)
 
 
 # ── Enums ──────────────────────────────────────────────────────────────────
