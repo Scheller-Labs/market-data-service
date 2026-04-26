@@ -1,4 +1,5 @@
 ## WARNING: This is a new project and needs some validation work before it is fully ready. Expect issues. I am working to stabilize quickly.
+Update: 2026-04-26 - I have validated all the scenarios outlined in the cli-outcomes.md file and they all work as expected. I have also added a new command `iv-rank-backfill` to backfill historical IV rank data. There is some final documentation cleanup to do and then I will recommend using this service.
 
 ## High quality market data can carry significant costs. Please ensure you are aware of all the costs for the various tiers on each provider to avoid any surprises. Check the provider's website for exact costs as any references to tiers in the documentation may have changed.
 
